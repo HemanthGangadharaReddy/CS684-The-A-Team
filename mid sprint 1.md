@@ -1,6 +1,6 @@
-#Status Report
+# Status Report
 
-###Completed Portions
+### Completed Portions
 -Landing Page for the App(Requirement-1)(Ayush)
 -Building of Sign-in Page(Requirement-1) (Venkat)
 -Building of Sign-up Page(Requirement-1) (Venkat)
@@ -8,7 +8,7 @@
 -Test Plan for Sprint 1 (Ayush)
 -Test Cases for Sprint 1 (Hemanth)
 
-###Remaining 
+### Remaining 
 -landing page for logged-in User(Requirement-2) (Ayush)
 -Building of Sign-in Page(Requirement-2 & 3) (Venkat)
 -Building of Sign-up Page(Requirement-2 & 3) (Venkat)
