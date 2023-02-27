@@ -36,3 +36,6 @@ We have approached this sprint by first creating the UX for the web application 
 - UX testing
 - API Testing
 - Database testing
+
+# Schedule
+The Schedule of the testing will be on Friday, Mar 3, 2023
