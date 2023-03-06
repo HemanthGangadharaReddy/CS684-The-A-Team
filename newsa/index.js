@@ -18,24 +18,37 @@ var db = mongoose.connection;
 
 db.on('error', () => console.log("Error in Connecting to Database"));
 db.once('open', () => console.log("Connected to Database"));
-app.post("/signup", (req, res) => {
+
+  app.post("/signup", (req, res) => {
     var name = req.body.name;
     var email = req.body.email;
-    var phno = req.body.phno;
     var password = req.body.password;
-    var data = {
-        "name": name,
-        "email": email,
-        "phno": phno,
-        "password": password
+    var password2 = req.body.confirmpassword;
+  
+    if (password !== password2) {
+      return res.send(
+        '<script>alert("Passwords do not match!"); window.location.href = "/signup";</script>'
+      );
     }
-    db.collection('users').insertOne(data, (err, collection) => {
-        if (err) throw err;
-        console.log("Record Inserted Successfully");
+    else if(password.length < 8 ) {
+        return res.send(
+            '<script>alert("Password should be atleast 8 characters!"); window.location.href = "/signup";</script>'
+          );
+    }
+  
+    var data = {
+      name: name,
+      email: email,
+      password: password
+    };
+  
+    db.collection("users").insertOne(data, (err, collection) => {
+      if (err) throw err;
+      return res.send(
+        '<script>alert("Record Inserted Successfully!"); window.location.href = "/signin";</script>'
+      );
     });
-    return res.redirect('signup_success.html');
-
-})
+  });
 
 app.get("/", (req, res) => {
     res.set({
@@ -53,6 +66,9 @@ app.get('/signin', (req, res) => {
     res.sendFile('/Users/ayushchamoli/Desktop/newsss/javascript_signup/public/signup.html');
   });
 
+  app.get('/home', (req, res) => {
+    res.sendFile('/Users/ayushchamoli/Desktop/newsss/javascript_signup/public/home.html');
+  });
 
 app.post("/signin", async (request, response) => {
     try {
@@ -62,7 +78,7 @@ app.post("/signin", async (request, response) => {
 
         const usermail = db.collection('users').findOne({ name: username }, (err, res) => {
             if (res == null) {
-                response.send("Invalid information!❌❌❌! Please create account first");
+                response.send("Invalid information! Please create account first");
                 
             }
             else if (err) throw err;
@@ -70,19 +86,20 @@ app.post("/signin", async (request, response) => {
 
             if (res.password === password) {
                 
-                return response.redirect('home.html');
+                return response.redirect('/home',);
             }
             else {
-                response.send("Invalid Password!❌❌❌");
+                response.send("Invalid Password! 401");
             }
 
 
         });
     }
     catch (error) {
-        response.send("Invalid information❌");
+        response.send("Invalid information! 401");
     }
 
 })
+
 
 console.log("Listening on Port 3000");
