@@ -1,14 +1,33 @@
-var express = require("express")
-var bodyParser = require("body-parser")
-var mongoose = require("mongoose")
+var express = require("express");
+var bodyParser = require("body-parser");
+var mongoose = require("mongoose");
 
-const app = express()
+const app = express();
+const axios = require('axios');
+const API_KEY = 'f198edf37ab348b9a5871abb6236ca84';
+const cors = require('cors');
 
+module.exports = app
+app.set('view engine', 'ejs');
 app.use(bodyParser.json())
 app.use(express.static('public'))
 app.use(bodyParser.urlencoded({
     extended: true
 }))
+
+app.use(cors({
+    origin: '*'
+}));
+
+const session = require('express-session');
+// Set up session middleware
+app.use(session({
+  secret: 'Youwillneverguess',
+  resave: false,
+  saveUninitialized: true,
+}));
+
+
 
 mongoose.connect('mongodb://0.0.0.0:27017/mydb', {
     useNewUrlParser: true,
@@ -52,23 +71,137 @@ db.once('open', () => console.log("Connected to Database"));
 
 app.get("/", (req, res) => {
     res.set({
-        "Allow-access-Allow-Origin": '*'
+       "Allow-access-Allow-Origin": '*'
     })
     return res.redirect('index.html');
 
 }).listen(3000);
 
 app.get('/signin', (req, res) => {
-    res.sendFile('/Users/ayushchamoli/Desktop/newsss/javascript_signup/public/signin.html');
+    res.sendFile('/Users/ayushchamoli/Desktop/newsss 3/javascript_signup/public/signin.html');
   });
 
   app.get('/signup', (req, res) => {
-    res.sendFile('/Users/ayushchamoli/Desktop/newsss/javascript_signup/public/signup.html');
+    res.sendFile('/Users/ayushchamoli/Desktop/newsss 3/javascript_signup/public/signup.html');
   });
 
   app.get('/home', (req, res) => {
-    res.sendFile('/Users/ayushchamoli/Desktop/newsss/javascript_signup/public/home.html');
+    res.redirect("/top-headlines");
   });
+
+
+
+app.post('/profile', async (request, response) => {
+
+  try {
+
+    const general = request.body.General;
+    const business = request.body.Business;
+    const entertainment = request.body.Entertainment;
+    const health = request.body.Health;
+    const science = request.body.Science; 
+    const sport = request.body.Sports;
+    const technology = request.body.Technology; 
+
+  const { user } = request.session;
+  if (user) {
+
+        const filter  = {'name':user.username}
+        const update = {$set:{General: general,
+          Business:business,
+          Entertainment: entertainment,
+          Health:health,
+          Science:science,
+          Sport:sport,
+          Technology:technology}
+        };
+
+
+        db.collection('users').updateOne(filter, update, function(err,result){
+
+          if (err) throw err;
+          // console.log(result);
+          
+
+         
+        const usermail2 = db.collection('users').findOne({ name: user.username }, (err, res) => {
+            if (res == null) {
+                response.send("Invalid information! Please create account first");
+                
+            }
+            else if (err) throw err;
+
+            
+            request.session.user = {username:user.username,
+              general: res.General,
+              business:res.Business,
+              entertainment:res.Entertainment,
+              health: res.Health,
+              science: res.Science,
+              sport :res.Sport,
+              technology:res.Technology};
+
+      
+        });
+         
+
+     
+          
+          return response.redirect("/update_session")
+      
+        });
+
+
+  } else {
+    response.send("Please log in to perform such an action.<a href='/signin'>login</a>", 401);
+
+  } 
+  }
+
+  catch (error) {
+        console.log(error);
+        response.send("Something wrong! 401", 401);
+    }
+
+
+});
+
+
+app.get("/update_session", async (request, response) => {
+    try {
+        
+        const {user} = request.session;
+        const usermail = db.collection('users').findOne({ name: user.username }, (err, res) => {
+            if (res == null) {
+                response.send("Invalid information! Please create account first");
+                
+            }
+            else if (err) throw err;
+
+
+           
+                request.session.user = {username:res.name,
+                general:res.General,
+                business:res.Business,
+                entertainment:res.Entertainment,
+                health: res.Health,
+                science: res.Science,
+                sport :res.Sport,
+                technology:res.Technology};
+                return response.redirect('/top-headlines',);
+          
+
+        });
+    }
+    catch (error) {
+        return response.redirect("/top-headlines")
+        // response.send("Invalid information! 401");
+
+    }
+
+})
+
+
 
 app.post("/signin", async (request, response) => {
     try {
@@ -85,8 +218,15 @@ app.post("/signin", async (request, response) => {
 
 
             if (res.password === password) {
-                
-                return response.redirect('/home',);
+                request.session.user = {username:res.name,
+                general:res.General,
+                business:res.Business,
+                entertainment:res.Entertainment,
+                health: res.Health,
+                science: res.Science,
+                sport :res.Sport,
+                technology:res.Technology};
+                return response.redirect('/top-headlines',);
             }
             else {
                 response.send("Invalid Password! 401");
@@ -100,6 +240,115 @@ app.post("/signin", async (request, response) => {
     }
 
 })
+
+
+app.get('/profile', (req, res) => {
+  const { user } = req.session;
+
+  if (user) {
+    res.render('profile', {'user': user.username});
+  } else {
+    res.send("Please log in to perform such an action.<a href='/signin'>login</a>");
+  }
+});
+
+
+
+app.get('/top-headlines', async (req, res) => {
+  try {
+
+    const { user } = req.session;
+
+ 
+    if (user){
+
+      console.log(user)     
+
+      var health = user.health;
+      var technology = user.technology;
+      var general = user.general;
+      var business = user.business;
+      var entertainment = user.entertainment;
+      var science = user.science;
+      var sport = user.sport;
+
+      if (health != null){
+
+      const { data } = await axios.get(`https://newsapi.org/v2/top-headlines?country=us&category=${health}&apiKey=${API_KEY}`);
+      const articles = data.articles;
+      res.render('index', { articles });    
+      }
+      else if (technology != null){
+         const { data } = await axios.get(`https://newsapi.org/v2/top-headlines?country=us&category=${technology}&apiKey=${API_KEY}`);
+      const articles = data.articles;
+      res.render('index', { articles });  
+
+      }
+
+      else if (general != null)
+      {
+         const { data } = await axios.get(`https://newsapi.org/v2/top-headlines?country=us&category=${general}&apiKey=${API_KEY}`);
+      const articles = data.articles;
+      res.render('index', { articles }); 
+
+      }
+
+
+           else if (business != null)
+      {
+         const { data } = await axios.get(`https://newsapi.org/v2/top-headlines?country=us&category=${business}&apiKey=${API_KEY}`);
+      const articles = data.articles;
+      res.render('index', { articles }); 
+
+      }
+
+
+            else if (entertainment != null)
+      {
+         const { data } = await axios.get(`https://newsapi.org/v2/top-headlines?country=us&category=${entertainment}&apiKey=${API_KEY}`);
+      const articles = data.articles;
+      res.render('index', { articles }); 
+
+      }
+
+
+            else if (science != null)
+      {
+         const { data } = await axios.get(`https://newsapi.org/v2/top-headlines?country=us&category=${science}&apiKey=${API_KEY}`);
+      const articles = data.articles;
+      res.render('index', { articles }); 
+
+      }
+
+
+            else if (sport != null)
+      {
+         const { data } = await axios.get(`https://newsapi.org/v2/top-headlines?country=us&category=${sport}&apiKey=${API_KEY}`);
+      const articles = data.articles;
+      res.render('index', { articles }); 
+
+      }
+
+      else{
+        console.log("not empty");
+        const { data } = await axios.get(`https://newsapi.org/v2/top-headlines?country=us&category=general&apiKey=${API_KEY}`);
+        const articles = data.articles;
+        res.render('index', { articles });
+      }
+    }
+
+
+    else{
+
+    const { data } = await axios.get(`https://newsapi.org/v2/top-headlines?country=us&category=general&apiKey=${API_KEY}`);
+    const articles = data.articles;
+    res.render('index', { articles });
+  }
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error');
+  }
+});
 
 
 console.log("Listening on Port 3000");
