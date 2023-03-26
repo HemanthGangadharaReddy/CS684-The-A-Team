@@ -73,16 +73,26 @@ app.get("/", (req, res) => {
     res.set({
        "Allow-access-Allow-Origin": '*'
     })
-    return res.redirect('index.html');
 
+   res.redirect("/g_home")
 }).listen(3000);
 
+
+
+app.get("/g_home", async (req, res) => {
+    const { data } = await axios.get(`https://newsapi.org/v2/top-headlines?country=us&category=general&apiKey=${API_KEY}`);
+    const articles = data.articles;
+    res.render('home', { articles });
+});
+
+
+
 app.get('/signin', (req, res) => {
-    res.sendFile('/Users/ayushchamoli/Desktop/newsss 3/javascript_signup/public/signin.html');
+    res.sendFile('/Users/ayushchamoli/Desktop/prog/newsss/javascript_signup/public/signin.html');
   });
 
   app.get('/signup', (req, res) => {
-    res.sendFile('/Users/ayushchamoli/Desktop/newsss 3/javascript_signup/public/signup.html');
+    res.sendFile('/Users/ayushchamoli/Desktop/prog/newsss/javascript_signup/public/signup.html');
   });
 
   app.get('/home', (req, res) => {
@@ -218,6 +228,8 @@ app.post("/signin", async (request, response) => {
 
 
             if (res.password === password) {
+
+
                 request.session.user = {username:res.name,
                 general:res.General,
                 business:res.Business,
@@ -226,6 +238,8 @@ app.post("/signin", async (request, response) => {
                 science: res.Science,
                 sport :res.Sport,
                 technology:res.Technology};
+
+
                 return response.redirect('/top-headlines',);
             }
             else {
@@ -246,7 +260,7 @@ app.get('/profile', (req, res) => {
   const { user } = req.session;
 
   if (user) {
-    res.render('profile', {'user': user.username});
+    res.render('profile', {user});
   } else {
     res.send("Please log in to perform such an action.<a href='/signin'>login</a>");
   }
@@ -254,101 +268,35 @@ app.get('/profile', (req, res) => {
 
 
 
-app.get('/top-headlines', async (req, res) => {
-  try {
+app.get("/category/:cat", async (req, res) =>{
 
-    const { user } = req.session;
-
- 
-    if (user){
-
-      console.log(user)     
-
-      var health = user.health;
-      var technology = user.technology;
-      var general = user.general;
-      var business = user.business;
-      var entertainment = user.entertainment;
-      var science = user.science;
-      var sport = user.sport;
-
-      if (health != null){
-
-      const { data } = await axios.get(`https://newsapi.org/v2/top-headlines?country=us&category=${health}&apiKey=${API_KEY}`);
+      const { data } = await axios.get(`https://newsapi.org/v2/top-headlines?country=us&category=${req.params.cat}&apiKey=${API_KEY}`);
       const articles = data.articles;
-      res.render('index', { articles });    
-      }
-      else if (technology != null){
-         const { data } = await axios.get(`https://newsapi.org/v2/top-headlines?country=us&category=${technology}&apiKey=${API_KEY}`);
-      const articles = data.articles;
-      res.render('index', { articles });  
+      const { user } = req.session;
+      res.render('cat', { articles, user });    
 
-      }
-
-      else if (general != null)
-      {
-         const { data } = await axios.get(`https://newsapi.org/v2/top-headlines?country=us&category=${general}&apiKey=${API_KEY}`);
-      const articles = data.articles;
-      res.render('index', { articles }); 
-
-      }
-
-
-           else if (business != null)
-      {
-         const { data } = await axios.get(`https://newsapi.org/v2/top-headlines?country=us&category=${business}&apiKey=${API_KEY}`);
-      const articles = data.articles;
-      res.render('index', { articles }); 
-
-      }
-
-
-            else if (entertainment != null)
-      {
-         const { data } = await axios.get(`https://newsapi.org/v2/top-headlines?country=us&category=${entertainment}&apiKey=${API_KEY}`);
-      const articles = data.articles;
-      res.render('index', { articles }); 
-
-      }
-
-
-            else if (science != null)
-      {
-         const { data } = await axios.get(`https://newsapi.org/v2/top-headlines?country=us&category=${science}&apiKey=${API_KEY}`);
-      const articles = data.articles;
-      res.render('index', { articles }); 
-
-      }
-
-
-            else if (sport != null)
-      {
-         const { data } = await axios.get(`https://newsapi.org/v2/top-headlines?country=us&category=${sport}&apiKey=${API_KEY}`);
-      const articles = data.articles;
-      res.render('index', { articles }); 
-
-      }
-
-      else{
-        console.log("not empty");
-        const { data } = await axios.get(`https://newsapi.org/v2/top-headlines?country=us&category=general&apiKey=${API_KEY}`);
-        const articles = data.articles;
-        res.render('index', { articles });
-      }
-    }
-
-
-    else{
-
-    const { data } = await axios.get(`https://newsapi.org/v2/top-headlines?country=us&category=general&apiKey=${API_KEY}`);
-    const articles = data.articles;
-    res.render('index', { articles });
-  }
-  } catch (error) {
-    console.error(error);
-    res.status(500).send('Error');
-  }
 });
 
 
+app.get('/top-headlines', async (req, res) => {
+
+      const { user } = req.session;
+
+      if (user){      
+      const { data } = await axios.get(`https://newsapi.org/v2/top-headlines?country=us&category=general&apiKey=${API_KEY}`);
+      const articles = data.articles;
+      
+      res.render('index', { articles, user });
+      }
+
+      else{
+
+        res.send("Please log in to perform such an action.<a href='/signin'>login</a>", 401);
+      }
+
+  });
+
+
 console.log("Listening on Port 3000");
+
+
