@@ -16,3 +16,22 @@ UI Test Cases:
 | 12 | Select all and submit the category | Hemanth | Manual Testing | The landing page should be displayed when we click on OK button. |
 | 13 | Button to Cancel the changes | Hemanth | Manual Testing | The Settings page should display a 'Cancel' button to cancel the selected categories. |
 | 14 | Select and Cancel the changes | Hemanth | Manual Testing | The landing page should be displayed when we click on Cancel button. |
+
+
+
+DataBase Test Cases:
+
+| Test Case Id | Description | Executed By | Test Method | Expected Results | Pass/Fail |
+| ------------ | ----------- | ----------- | ----------- | ---------------- | --------- |
+| 1 | New Schema changes | Hemanth | Manual Testing | The new columns should be present in the database for the News categories. |
+| 2 | Changes in database | Hemanth | Manual Testing | The Business and Entertainment columns should show true in the database. |
+
+
+API Test Cases:
+
+| Test Case Id | Description | Executed By | Test Method | Expected Results | Pass/Fail |
+| ------------ | ----------- | ----------- | ----------- | ---------------- | --------- |
+| 1 | Retrieve articles | Hemanth | Manual | We should get a 200 response and retrieve the articles for the user based on the preference selected by the user. |
+| 2 | Retrieve articles (unauthorized user) | Hemanth | Manual | We should get a 401 response. |
+| 3 | Retrieve articles | Hemanth | Manual | We should get a 200 response and retrieve the news articles. |
+
