@@ -32,7 +32,7 @@ We have approached this sprint by first creating the UX for the web application 
 - User can check successfully login and logout and check for the news
 
 # Testing Tasks
-- Unit Testing by each Team member on their own machine
+- Unit Testing by mocha test framework by each Team member on their own machine
 
 # Responsibilities
 - UX testing
