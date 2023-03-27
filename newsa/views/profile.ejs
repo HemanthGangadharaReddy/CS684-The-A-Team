@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>News API</title>
+     <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+   <div class="header">
+            <img src="media/logo.png" class="logo">
+        <ul class="nav-links">
+           <% if (user.sport) {%>
+
+    <li><a href="/category/sports">SPORTS</a></li>
+   
+    <% } %>
+
+    
+
+    <% if (user.general) {%>
+    <li><a href="/category/general">GENERAL</a></li>
+   
+    <% } %>
+
+
+        <% if (user.science) {%>
+        <li><a href="/category/science">SCIENCE</a></li>
+
+   
+    <% } %>
+
+        <% if (user.health) {%>
+                    <li><a href="/category/health">HEALTH</a></li>
+
+   
+    <% } %>
+
+        <% if (user.entertainment) {%>
+
+                    <li><a href="/category/entertainment">ENTERTAINMENT</a></li>
+         
+   
+    <% } %>
+
+
+        <% if (user.technology) {%>
+           <li><a href="/category/technology">TECHNOLOGY</a></li>
+   
+    <% } %>
+
+        <% if (user.business) {%>
+        <li><a href="/category/business">BUSINESS</a></li>
+   
+    <% } %>
+
+
+            
+            
+        </ul>
+        <a class="button" style="margin-left: 90px;" href="/" >SIGN OUT</button>
+        </a>
+
+        <span style="color: white">  Hello  <%= user.username %></span>
+    </div>
+
+
+
+
+
+
+<h2 style="margin:5% 30% 0% 30%;">Settings</h2>
+
+<div style= "border:2px solid black; margin:5% 30% 0% 30%; padding:12px;">
+<form action="/profile" method='post'>
+
+  <% if (user.general) {%>
+
+<input type="checkbox" id="vehicle1" name="General" value="general" checked>
+
+    <%} else {%>
+
+<input type="checkbox" id="vehicle1" name="General" value="general">
+
+    <% } %>
+  
+  <label for="vehicle1"> General</label><br>
+
+
+      <% if (user.business) {%>
+
+  <input type="checkbox" id="vehicle2" name="Business" value="business" checked>
+
+    <%} else {%>
+  <input type="checkbox" id="vehicle2" name="Business" value="business">
+
+
+    <% } %>
+
+  <label for="vehicle2"> Business</label><br>
+
+
+       <% if (user.entertainment) {%>
+
+
+  <input type="checkbox" id="vehicle3" name="Entertainment" value="entertainment" checked>
+    <%} else {%>
+  <input type="checkbox" id="vehicle3" name="Entertainment" value="entertainment">
+
+
+    <% } %>
+
+  <label for="vehicle3"> Entertainment</label><br>
+
+
+      <% if (user.health) {%>
+
+
+  <input type="checkbox" id="vehicle4" name="Health" value="health" checked>
+    <%} else {%>
+  <input type="checkbox" id="vehicle4" name="Health" value="health">
+
+
+    <% } %>
+
+  <label for="vehicle4"> Health</label><br>
+
+
+      <% if (user.science) {%>
+
+  <input type="checkbox" id="vehicle5" name="Science" value="science" checked>
+
+    <%} else {%>
+  <input type="checkbox" id="vehicle5" name="Science" value="science">
+
+
+    <% } %>
+
+  <label for="vehicle5"> Science</label><br>
+
+
+
+      <% if (user.sport) {%>
+
+
+  <input type="checkbox" id="vehicle6" name="Sports" value="sports" checked>
+    <%} else {%>
+
+  <input type="checkbox" id="vehicle6" name="Sports" value="sports">
+
+    <% } %>
+
+  <label for="vehicle6"> Sports</label><br>
+
+
+      <% if (user.technology) {%>
+
+  <input type="checkbox" id="vehicle7" name="Technology" value="technology" checked>
+
+    <%} else {%>
+  <input type="checkbox" id="vehicle7" name="Technology" value="technology">
+
+
+    <% } %>
+
+  <label for="vehicle7"> Technology</label><br>
+
+
+
+  <span style="margin:5% 0% 5% 70%;">
+   <button onClick="window.location.reload()"> cancel </button>
+  <input type="submit" value="Submit" style=""></span>
+</form>
+
+</div>
+</body>
+
+
+</html>
