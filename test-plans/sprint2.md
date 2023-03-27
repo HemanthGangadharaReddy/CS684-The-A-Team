@@ -10,7 +10,7 @@ This is an application created for logging in and signup up users. The landing p
 # Features to be Tested
 - Landing page with news
 - Logging in and displaying news on portal
-- Settins to choose the category
+- Settings to choose the category
 - Login and logout to show it works
 
 # Approach
