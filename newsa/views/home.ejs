@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>News API</title>
+     <link rel="stylesheet" href="style.css">
+  </head>
+  <body>
+   <div class="header">
+            <img src="media/logo.png" class="logo">
+        <ul class="nav-links">
+            <li><a href="/home"></a></li>
+            <li><a href="/home"></a></li>
+            <li><a href="/home"></a></li>
+            <li><a href="/home"></a></li>
+            <li><a href="/home"></a></li>
+            <li><a href="/home"></a></li>
+        </ul>
+    <a class="button" style="margin-left: 40%;" href="/signin" >SIGN IN</button> </a>
+    </div>
+
+
+<br><br>
+    <span style="margin: 10px 0px 0px 10%;"><a href="/top-headlines">refresh</a></span> <span style="margin: 0px 0px 0px 73%;"><a href="/profile">Setting </a></span>
+
+    <% articles.forEach(article => { %>
+    <div style="border:2px solid black; margin:0px 10% 1px 10%; padding:4%;">
+      <h2><%= article.title %></h2>
+      <p><%= article.description %></p>
+      <p><a href="<%= article.url %>">Read More</a></p>
+  </div>
+    <% }) %>
+  </body>
+</html>
