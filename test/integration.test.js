@@ -78,6 +78,21 @@ describe("GET /category/{category}   integration test", function(){
   });
 });
 
+describe("GET /category/{category}   integration test", function(){
+
+
+  it("Integration test for /category/{category}", function(done) {
+    request(app)
+    .get('/category/business')
+    .expect(200)
+    .end(function(err, res){
+
+      if (err) return done(err);
+      assert.equal(res.statusCode, 200);
+      done();
+    });
+  });
+});
 
 
 
