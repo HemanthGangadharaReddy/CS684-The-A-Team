@@ -11,45 +11,45 @@
         <ul class="nav-links">
            <% if (user.sport) {%>
 
-    <li><a href="/category/sports">SPORTS</a></li>
+    <li><a href="/cat/sports">SPORTS</a></li>
    
     <% } %>
 
     
 
     <% if (user.general) {%>
-    <li><a href="/category/general">GENERAL</a></li>
+    <li><a href="/cat/general">GENERAL</a></li>
    
     <% } %>
 
 
         <% if (user.science) {%>
-        <li><a href="/category/science">SCIENCE</a></li>
+        <li><a href="/cat/science">SCIENCE</a></li>
 
    
     <% } %>
 
         <% if (user.health) {%>
-                    <li><a href="/category/health">HEALTH</a></li>
+                    <li><a href="/cat/health">HEALTH</a></li>
 
    
     <% } %>
 
         <% if (user.entertainment) {%>
 
-                    <li><a href="/category/entertainment">ENTERTAINMENT</a></li>
+                    <li><a href="/cat/entertainment">ENTERTAINMENT</a></li>
          
    
     <% } %>
 
 
         <% if (user.technology) {%>
-           <li><a href="/category/technology">TECHNOLOGY</a></li>
+           <li><a href="/cat/technology">TECHNOLOGY</a></li>
    
     <% } %>
 
         <% if (user.business) {%>
-        <li><a href="/category/business">BUSINESS</a></li>
+        <li><a href="/cat/business">BUSINESS</a></li>
    
     <% } %>
 
@@ -57,10 +57,10 @@
             
             
         </ul>
-        <a class="button" style="margin-left: 90px;" href="/" >SIGN OUT</button>
+        <a class="button" style="margin-left: 90px;" href="/logout" >SIGN OUT</button>
         </a>
 
-        <span style="color: white">  Hello  <%= user.username %></span>
+        <span style="color: white">Hello, <%= user.username %></span>
     </div>
 
 
@@ -167,9 +167,11 @@
 
 
   <span style="margin:5% 0% 5% 70%;">
-   <button onClick="window.location.reload()"> cancel </button>
-  <input type="submit" value="Submit" style=""></span>
+   
+  <input type="submit" value="Submit" style="">
+
 </form>
+<a  onClick="window.location.reload()"><button> cancel </button></a></span>
 
 </div>
 </body>
