@@ -7,6 +7,10 @@ const axios = require('axios');
 const API_KEY = 'f198edf37ab348b9a5871abb6236ca84';
 const cors = require('cors');
 
+
+const NEWS_API_URL = `https://newsapi.org/v2/top-headlines?country=us&apiKey=${API_KEY}`;
+
+const pageSize = 10;
 module.exports = app
 app.set('view engine', 'ejs');
 app.use(bodyParser.json())
@@ -36,7 +40,7 @@ mongoose.connect('mongodb://0.0.0.0:27017/mydb', {
 var db = mongoose.connection;
 
 db.on('error', () => console.log("Error in Connecting to Database"));
-db.once('open', () => console.log("Connected to Database"));
+db.once('open', () => console.log(""));
 
   app.post("/signup", (req, res) => {
     var name = req.body.name;
@@ -80,9 +84,16 @@ app.get("/", (req, res) => {
 
 
 app.get("/g_home", async (req, res) => {
+
+  const { user } = req.session;
+
+  if (user){
+  res.redirect("/articles")
+  }else{
     const { data } = await axios.get(`https://newsapi.org/v2/top-headlines?country=us&category=general&apiKey=${API_KEY}`);
     const articles = data.articles;
     res.render('home', { articles });
+  }
 });
 
 
@@ -96,7 +107,7 @@ app.get('/signin', (req, res) => {
   });
 
   app.get('/home', (req, res) => {
-    res.redirect("/top-headlines");
+    res.redirect("/articles");
   });
 
 
@@ -198,13 +209,13 @@ app.get("/update_session", async (request, response) => {
                 science: res.Science,
                 sport :res.Sport,
                 technology:res.Technology};
-                return response.redirect('/top-headlines',);
+                return response.redirect('/articles',);
           
 
         });
     }
     catch (error) {
-        return response.redirect("/top-headlines")
+        return response.redirect("/articles")
         // response.send("Invalid information! 401");
 
     }
@@ -240,7 +251,7 @@ app.post("/signin", async (request, response) => {
                 technology:res.Technology};
 
 
-                return response.redirect('/top-headlines',);
+                return response.redirect('/articles',);
             }
             else {
                 response.send("Invalid Password! 401");
@@ -268,25 +279,45 @@ app.get('/profile', (req, res) => {
 
 
 
-app.get("/category/:cat", async (req, res) =>{
+app.get("/cat/:cat", async (req, res) =>{
 
-      const { data } = await axios.get(`https://newsapi.org/v2/top-headlines?country=us&category=${req.params.cat}&apiKey=${API_KEY}`);
-      const articles = data.articles;
-      const { user } = req.session;
-      res.render('cat', { articles, user });    
+
+      const { page = 1 } = req.query;
+
+      try {
+        const response = await axios.get(`${NEWS_API_URL}&page=${page}&category=${req.params.cat}`);
+        const { articles, totalResults } = response.data;
+        const totalPages = Math.ceil(totalResults / pageSize);
+        const {user} = req.session;
+
+        var current_cat = req.params.cat;
+        console.log(current_cat);
+         res.render("cat", { articles, totalPages, currentPage: parseInt(page), user, current_cat});
+        } catch (error) {
+        console.error(error);
+        res.render("error");
+        }  
 
 });
 
 
-app.get('/top-headlines', async (req, res) => {
-
+app.get('/articles', async (req, res) => {
       const { user } = req.session;
-
       if (user){      
-      const { data } = await axios.get(`https://newsapi.org/v2/top-headlines?country=us&category=general&apiKey=${API_KEY}`);
-      const articles = data.articles;
-      
-      res.render('index', { articles, user });
+       const { page = 1 } = req.query;
+       const CATEGORIES = ['business', 'technology','health']
+      try {
+        const response = await axios.get(`${NEWS_API_URL}&page=${page}&pageSize=10`);
+        const { articles, totalResults } = response.data;
+        const totalPages = Math.ceil(totalResults / pageSize);
+        console.log("this is new");
+        console.log(totalPages);
+        res.render("index", { articles, totalPages, currentPage: parseInt(page), user});
+        } catch (error) {
+        console.error(error);
+        res.render("error");
+        }
+
       }
 
       else{
@@ -297,6 +328,55 @@ app.get('/top-headlines', async (req, res) => {
   });
 
 
+app.get("/category/:category", async (req, res) => {
+
+    const response = await axios.get(`${NEWS_API_URL}&category=${req.params.category}`);
+    const { articles } = response.data;
+    res.status(200).send(articles)
+});
+
+app.get("/news/:user",  async (request, response) => {
+
+        global.data = true;
+        const usermail = await db.collection('users').findOne({ name: request.params.user }, (err, res) => {
+            if (res == null) {
+            global.data = false;  
+            }
+
+        });
+        
+        if (data == false) {
+
+            response.status(401).send("User not found");
+        }
+        else{
+       
+        const response2 = await axios.get(`${NEWS_API_URL}&category=general`);
+        const {articles} = response2.data;
+        return response.status(200).send(articles);
+    }
+
+    
+   
+
+});
+
+
+
+
+app.get("/logout", (req, res) => {
+
+   req.session.user = ""
+
+   res.redirect("/")
+});
+
+
 console.log("Listening on Port 3000");
+
+
+
+
+
 
 
