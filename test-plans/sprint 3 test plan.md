@@ -26,6 +26,7 @@ This is an application created for logging in and signup up users. The landing p
 
 # Approach
 We have approached this sprint by first creating the UX for the web application and working on creating an API to connect with the Database. We have created various test cases for the same.
+The Integration testing was done through a manual test approach.
 
 # Pass/Fail Criteria
 
