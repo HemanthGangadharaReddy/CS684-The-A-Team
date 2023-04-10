@@ -4,7 +4,7 @@ var mongoose = require("mongoose");
 
 const app = express();
 const axios = require('axios');
-const API_KEY = 'f198edf37ab348b9a5871abb6236ca84';
+const API_KEY = '03219a27e845427586d16fe489b3aec8';
 const cors = require('cors');
 
 
@@ -99,11 +99,11 @@ app.get("/g_home", async (req, res) => {
 
 
 app.get('/signin', (req, res) => {
-    res.sendFile('/Users/ayushchamoli/Desktop/prog/newsss 2/javascript_signup/public/signin.html');
+    res.sendFile('/Users/ayushchamoli/Desktop/prog/newsss/javascript_signup/public/signin.html');
   });
 
   app.get('/signup', (req, res) => {
-    res.sendFile('/Users/ayushchamoli/Desktop/prog/newsss 2/javascript_signup/public/signup.html');
+    res.sendFile('/Users/ayushchamoli/Desktop/prog/newsss/javascript_signup/public/signup.html');
   });
 
   app.get('/home', (req, res) => {
@@ -160,7 +160,8 @@ app.post('/profile', async (request, response) => {
               health: res.Health,
               science: res.Science,
               sport :res.Sport,
-              technology:res.Technology};
+              technology:res.Technology,
+              home:"home"};
 
       
         });
@@ -208,7 +209,8 @@ app.get("/update_session", async (request, response) => {
                 health: res.Health,
                 science: res.Science,
                 sport :res.Sport,
-                technology:res.Technology};
+                technology:res.Technology,
+             home:"home"};
                 return response.redirect('/articles',);
           
 
@@ -248,7 +250,8 @@ app.post("/signin", async (request, response) => {
                 health: res.Health,
                 science: res.Science,
                 sport :res.Sport,
-                technology:res.Technology};
+                technology:res.Technology,
+                home:'home'};
 
 
                 return response.redirect('/articles',);
@@ -283,13 +286,24 @@ app.get("/cat/:cat", async (req, res) =>{
 
 
       const { page = 1 } = req.query;
+      global.user = {}
+
+      console.log(req.session.user);
+      try{
+        global.user = req.session.user;
+      }
+      catch{
+
+        global.user = {}
+      }
 
       try {
         const response = await axios.get(`${NEWS_API_URL}&page=${page}&category=${req.params.cat}`);
         const { articles, totalResults } = response.data;
         const totalPages = Math.ceil(totalResults / pageSize);
-        const {user} = req.session;
 
+
+        
         var current_cat = req.params.cat;
         console.log(current_cat);
          res.render("cat", { articles, totalPages, currentPage: parseInt(page), user, current_cat});
@@ -305,13 +319,10 @@ app.get('/articles', async (req, res) => {
       const { user } = req.session;
       if (user){      
        const { page = 1 } = req.query;
-       const CATEGORIES = ['business', 'technology','health']
       try {
-        const response = await axios.get(`${NEWS_API_URL}&page=${page}&pageSize=10`);
+        const response = await axios.get(`${NEWS_API_URL}&page=${page}`);
         const { articles, totalResults } = response.data;
         const totalPages = Math.ceil(totalResults / pageSize);
-        console.log("this is new");
-        console.log(totalPages);
         res.render("index", { articles, totalPages, currentPage: parseInt(page), user});
         } catch (error) {
         console.error(error);
@@ -369,7 +380,7 @@ app.get("/logout", (req, res) => {
 
    req.session.user = ""
 
-   res.redirect("/")
+   res.redirect("/g_home")
 });
 
 
