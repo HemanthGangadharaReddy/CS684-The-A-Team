@@ -317,10 +317,73 @@ app.get("/cat/:cat", async (req, res) =>{
 
 app.get('/articles', async (req, res) => {
       const { user } = req.session;
+
+      console.log(user);
+
+      global.catg = ""
+      global.sport = ""
+      global.business = ""
+      global.health = ""
+      global.entertainment = ""
+      global.technology = ""
+      global.science = ""
+      global.general = ""
+      // const catg = user.sport && user.business && user.health && user.entertainment && user.technology && user.science && user.general
+     
+        
+        try{
+        if (user.sport){
+            global.sport = user.sport;
+        }
+    }
+
+    catch{
+        console.log("erro1")
+    }
+      
+
+      try{
+
+        if (user.business){
+            global.business = user.business;
+        }
+
+    }catch{
+        console.log('erro2')
+    }
+
+        if (user.health){
+            global.health = user.health;
+        }
+
+        if (user.entertainment){
+            global.entertainment = user.entertainment;
+        }
+
+
+        if (user.technology){
+            global.technology = user.technology;
+        }
+
+
+        if (user.science){
+            global.science = user.science;
+        }
+
+
+        if (user.general){
+            global.general = user.general;
+        }
+     
+     global.catg = sport || business || health || entertainment || technology || science || general
+      
+
+
+     
       if (user){      
        const { page = 1 } = req.query;
       try {
-        const response = await axios.get(`${NEWS_API_URL}&page=${page}`);
+        const response = await axios.get(`${NEWS_API_URL}&category=${catg}&page=${page}`);
         const { articles, totalResults } = response.data;
         const totalPages = Math.ceil(totalResults / pageSize);
         res.render("index", { articles, totalPages, currentPage: parseInt(page), user});
