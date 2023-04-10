@@ -99,11 +99,11 @@ app.get("/g_home", async (req, res) => {
 
 
 app.get('/signin', (req, res) => {
-    res.sendFile('/Users/ayushchamoli/Desktop/prog/newsss/javascript_signup/public/signin.html');
+    res.sendFile('/Users/ayushchamoli/Desktop/prog/newsss 2/javascript_signup/public/signin.html');
   });
 
   app.get('/signup', (req, res) => {
-    res.sendFile('/Users/ayushchamoli/Desktop/prog/newsss/javascript_signup/public/signup.html');
+    res.sendFile('/Users/ayushchamoli/Desktop/prog/newsss 2/javascript_signup/public/signup.html');
   });
 
   app.get('/home', (req, res) => {
@@ -329,6 +329,7 @@ app.get('/articles', async (req, res) => {
 
 
 app.get("/category/:category", async (req, res) => {
+    console.log("hello world");
 
     const response = await axios.get(`${NEWS_API_URL}&category=${req.params.category}`);
     const { articles } = response.data;
