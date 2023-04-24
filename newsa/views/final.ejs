@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>NewsAPI</title>
+     <link rel="stylesheet" href="style.css">
+        <style type="text/css">
+
+     .input-container {
+  position: absolute;
+  top: 15%;
+  left: 0;
+  width: 100%;
+  height: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.input-container input[type="text"] {
+  width: 71%;
+  height: 30px;
+  font-size: 24px;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(211, 206, 245);
+  outline: none;
+
+}
+
+#butt{
+
+    height: 50px;
+  font-size: 24px;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(211, 206, 245);
+  
+}
+  .pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.pagination a {
+  display: inline-block;
+  padding: 8px 16px;
+  text-decoration: none;
+  color: #000;
+  border: 1px solid #ddd;
+}
+
+.pagination a.active {
+  background-color: #4CAF50;
+  color: white;
+  border: 1px solid #4CAF50;
+}
+
+.pagination a:hover:not(.active) {
+  background-color: #ddd;
+}
+
+.pagination a.prev,
+.pagination a.next {
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+</style>
+  </head>
+  <body>
+       <div class="header">
+            <img src="media/logo.png" class="logo">
+        <ul class="nav-links">
+
+
+
+
+    <li>
+      <a href="/articles" style="background-color: red;">HOME</a>
+    </li>
+   
+
+
+    <li><a href="/cat/sports">SPORTS</a></li>
+   
+ 
+
+    
+
+    <li><a href="/cat/general">GENERAL</a></li>
+   
+  
+
+
+        <li><a href="/cat/science">SCIENCE</a></li>
+
+
+                    <li><a href="/cat/health">HEALTH</a></li>
+
+   
+
+
+                    <li><a href="/cat/entertainment">ENTERTAINMENT</a></li>
+         
+
+           <li><a href="/cat/technology">TECHNOLOGY</a></li>
+
+        <li><a href="/cat/business">BUSINESS</a></li>
+   
+
+
+
+            
+            
+        </ul>
+        <a href="/articles" class="button" style="">refresh</a>
+        <a class="button" style="" href="/logout" >SIGN_OUT</button>
+        </a>
+
+        <span style="color: white">Hello, <%= user.username %></span>
+        <a href="/profile" class="button">Setting </a>
+       
+
+
+    </div>
+
+
+<form action="/search" method="">
+<div class="input-container" style="">
+  
+  <input type="text" placeholder="Type something..." name="parm">
+  <input type="submit" id="butt" name="" value="Search">
+
+</div>
+</form>
+        
+<br><br><br><br><br><br><br><br>
+
+    <% for (const article of articles) { %>
+      <article>
+         <div style="border:2px solid black; margin:0px 10% 1px 10%; padding:4%;">
+        <h2><%= article.title %></h2>  
+        <p><%= article.description %></p>
+        <p><%= article.publishedAt %></p>
+         <p><a href="<%= article.url %>">Read More</a></p>
+      </article>
+       </div>
+    <% } %>
+
+
+
+<div class="pagination">
+    <% if (totalPages > 1) { %>
+      <nav>
+        <% if (currentPage > 1) { %>
+          <a href="?page=<%= currentPage - 1 %>">Previous</a>
+        <% } %>
+     <span> <a class="active"><%= currentPage %></a></span>
+        <% if (currentPage < totalPages) { %>
+          <a href="?page=<%= currentPage + 1 %>">Next</a>
+        <% } %>
+      </nav>
+      <% } %>
+
+</div>
+
+
+    </body>
+    </html>
