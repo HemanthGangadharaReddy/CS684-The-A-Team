@@ -9,6 +9,9 @@
    <div class="header">
             <img src="media/logo.png" class="logo">
         <ul class="nav-links">
+
+   <li> <a href="/articles"> HOME </a>
+
            <% if (user.sport) {%>
 
     <li><a href="/cat/sports">SPORTS</a></li>
@@ -72,6 +75,9 @@
 
 <div style= "border:2px solid black; margin:5% 30% 0% 30%; padding:12px;">
 <form action="/profile" method='post'>
+
+<input type="checkbox" id="" name="" value="Home" checked>
+<label for="vehicle1"> Home</label><br>
 
   <% if (user.general) {%>
 
@@ -166,12 +172,40 @@
 
 
 
-  <span style="margin:5% 0% 5% 70%;">
-   
-  <input type="submit" value="Submit" style="">
+
+<br><br>
+
+  <input type="submit" value="Submit" >
+
 
 </form>
-<a  onClick="window.location.reload()"><button> cancel </button></a></span>
+<br>
+<a href="/profile" ><button id="Button"> cancel </button></a>
+
+
+<script>
+  const button = document.getElementById('myButton');
+  button.addEventListener('click', (event) => {
+    event.preventDefault(); // prevent default form submission behavior
+    // additional code here if needed
+    $('option:selected', this).remove();
+  });
+
+
+  var $lastChecked;
+
+$(".check-service").on("change", function () {
+    if ($(this).attr("checked") == "checked") {
+        lastChecked = $(this);
+    }
+    //your logic
+    //...
+    //now when you have to uncheck:
+
+})
+
+</script>
+
 
 </div>
 </body>
