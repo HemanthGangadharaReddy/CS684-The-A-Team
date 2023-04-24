@@ -6,10 +6,10 @@ const app = express();
 const axios = require('axios');
 const API_KEY = '03219a27e845427586d16fe489b3aec8';
 const cors = require('cors');
-
+const NewsAPI = require('newsapi');
 
 const NEWS_API_URL = `https://newsapi.org/v2/top-headlines?country=us&apiKey=${API_KEY}`;
-
+const newsapi = new NewsAPI(API_KEY);
 const pageSize = 10;
 module.exports = app
 app.set('view engine', 'ejs');
@@ -99,11 +99,11 @@ app.get("/g_home", async (req, res) => {
 
 
 app.get('/signin', (req, res) => {
-    res.sendFile('/Users/ayushchamoli/Desktop/prog/newsss/javascript_signup/public/signin.html');
+    res.sendFile('/Users/ayushchamoli/Desktop/prog/newsss 2/javascript_signup/public/signin.html');
   });
 
   app.get('/signup', (req, res) => {
-    res.sendFile('/Users/ayushchamoli/Desktop/prog/newsss/javascript_signup/public/signup.html');
+    res.sendFile('/Users/ayushchamoli/Desktop/prog/newsss 2/javascript_signup/public/signup.html');
   });
 
   app.get('/home', (req, res) => {
@@ -284,11 +284,9 @@ app.get('/profile', (req, res) => {
 
 app.get("/cat/:cat", async (req, res) =>{
 
-
       const { page = 1 } = req.query;
       global.user = {}
 
-      console.log(req.session.user);
       try{
         global.user = req.session.user;
       }
@@ -305,9 +303,11 @@ app.get("/cat/:cat", async (req, res) =>{
 
         
         var current_cat = req.params.cat;
-        console.log(current_cat);
          res.render("cat", { articles, totalPages, currentPage: parseInt(page), user, current_cat});
-        } catch (error) {
+        
+        }
+
+        catch (error) {
         console.error(error);
         res.render("error");
         }  
@@ -315,91 +315,6 @@ app.get("/cat/:cat", async (req, res) =>{
 });
 
 
-app.get('/articles', async (req, res) => {
-      const { user } = req.session;
-
-      console.log(user);
-
-      global.catg = ""
-      global.sport = ""
-      global.business = ""
-      global.health = ""
-      global.entertainment = ""
-      global.technology = ""
-      global.science = ""
-      global.general = ""
-      // const catg = user.sport && user.business && user.health && user.entertainment && user.technology && user.science && user.general
-     
-        
-        try{
-        if (user.sport){
-            global.sport = user.sport;
-        }
-    }
-
-    catch{
-        console.log("erro1")
-    }
-      
-
-      try{
-
-        if (user.business){
-            global.business = user.business;
-        }
-
-    }catch{
-        console.log('erro2')
-    }
-
-        if (user.health){
-            global.health = user.health;
-        }
-
-        if (user.entertainment){
-            global.entertainment = user.entertainment;
-        }
-
-
-        if (user.technology){
-            global.technology = user.technology;
-        }
-
-
-        if (user.science){
-            global.science = user.science;
-        }
-
-
-        if (user.general){
-            global.general = user.general;
-        }
-     
-     global.catg = sport || business || health || entertainment || technology || science || general
-      
-
-
-     
-      if (user){      
-       const { page = 1 } = req.query;
-      try {
-        const response = await axios.get(`${NEWS_API_URL}&category=${catg}&page=${page}`);
-        const { articles, totalResults } = response.data;
-        const totalPages = Math.ceil(totalResults / pageSize);
-        res.render("index", { articles, totalPages, currentPage: parseInt(page), user});
-        } catch (error) {
-        console.error(error);
-        res.render("error");
-        }
-
-      }
-
-      else{
-
-        res.send("Please log in to perform such an action.<a href='/signin'>login</a>", 401);
-      }
-
-  });
 
 
 app.get("/category/:category", async (req, res) => {
@@ -409,6 +324,66 @@ app.get("/category/:category", async (req, res) => {
     const { articles } = response.data;
     res.status(200).send(articles)
 });
+
+
+app.get("/search/:search_terms", async(req, res) =>{
+  const options = {
+      q: req.params.search_terms,
+      language: 'en',
+      sortBy: 'publishedAt'
+    };
+
+  const response = await axios.get(`https://newsapi.org/v2/everything`, {
+      params: options,
+      headers: {
+        'Authorization': API_KEY
+      }
+    });
+
+  const {articles} = response.data;
+  res.status(200).json(articles);
+
+});
+
+app.get('/search', async (req, res) => {
+     const { page = 1 } = req.query;
+     const pagesize2 = 30;
+     const parms = req.query.parm;
+     console.log(req.query.parm)
+     global.user = {}
+
+      try{
+        global.user = req.session.user;
+      }
+      catch{
+
+        global.user = {}
+      }
+
+
+  try {
+    const options = {
+      q: req.query.parm,
+      language: 'en',
+      sortBy: 'publishedAt'
+    };
+    
+    const response = await axios.get(`https://newsapi.org/v2/everything`, {
+      params: options,
+      headers: {
+        'Authorization': API_KEY
+      }
+    });
+
+   const { articles, totalResults } = response.data;
+   const totalPages = Math.ceil(totalResults / pagesize2);
+   res.render("search", { articles, totalPages, currentPage: parseInt(page), user, parms});
+
+  } catch (error) {
+    res.status(500).json({ message: 'Server error' });
+  }
+});
+
 
 app.get("/news/:user",  async (request, response) => {
 
@@ -452,6 +427,108 @@ console.log("Listening on Port 3000");
 
 
 
+async function getHeadlinesForCategory(category, page) {
+  const pageSize = 10;
+  const response = await newsapi.v2.topHeadlines({
+    category,
+    pageSize,
+    page,
+    "language":'en'
+  });
+  const articles = response.articles.map((article) => ({
+    title: article.title,
+    description: article.description,
+    url: article.url,
+    imageUrl: article.urlToImage,
+    publishedAt: new Date(article.publishedAt).toLocaleString(),
+  }));
+  return {
+    articles,
+    totalResults: response.totalResults,
+    totalPages: Math.ceil(response.totalResults / pageSize),
+  };
+}
 
 
+app.get('/articles', async (req, res) => {
+  const categories = [];
+
+  const { user } = req.session;
+
+  if (user){
+
+    console.log("hello")
+  }
+  else{
+    return res.redirect("/signin"), 400
+  }
+
+  try{
+      if (user.sport){
+            categories.push(user.sport)
+        }
+    }
+
+    catch{
+        console.log("erro1")
+    }
+      
+
+      try{
+
+        if (user.business){
+            categories.push(user.business)
+        }
+
+    }catch{
+        console.log('erro2')
+    }
+
+        if (user.health){
+           categories.push(user.health)
+        }
+
+        if (user.entertainment){
+            categories.push(user.entertainment)
+        }
+
+
+        if (user.technology){
+            categories.push(user.technology)
+        }
+
+
+        if (user.science){
+            categories.push(user.science)
+        }
+
+
+        if (user.general){
+            categories.push(user.general)
+        }
+
+
+  console.log(categories)
+  const page = parseInt(req.query.page || '1');
+  const results = await Promise.all(
+    categories.map((category) => getHeadlinesForCategory(category, page))
+  );
+  const mergedResults = results.reduce(
+    (merged, result) => ({
+      articles: [...merged.articles, ...result.articles],
+      totalResults: Math.max(merged.totalResults, result.totalResults),
+      totalPages: Math.max(merged.totalPages, result.totalPages),
+    }),
+    { articles: [], totalResults: 0, totalPages: 0 }
+  );
+
+  console.log(mergedResults.articles)
+  res.render('final', {
+    articles: mergedResults.articles,
+    totalResults: mergedResults.totalResults,
+    totalPages: mergedResults.totalPages,
+    currentPage: page,
+    user
+  });
+});
 
