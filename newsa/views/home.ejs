@@ -4,25 +4,92 @@
     <meta charset="utf-8">
     <title>News API</title>
      <link rel="stylesheet" href="style.css">
+     <style type="text/css">
+       .input-container {
+  position: absolute;
+  top: 15%;
+  left: 0;
+  width: 100%;
+  height: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.input-container input[type="text"] {
+  width: 71%;
+  height: 30px;
+  font-size: 24px;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(211, 206, 245);
+  outline: none;
+
+}
+
+#butt{
+
+    height: 50px;
+  font-size: 24px;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(211, 206, 245);
+  
+}
+     </style>
   </head>
   <body>
    <div class="header">
             <img src="media/logo.png" class="logo">
         <ul class="nav-links">
-            <li><a href="/home"></a></li>
-            <li><a href="/home"></a></li>
-            <li><a href="/home"></a></li>
-            <li><a href="/home"></a></li>
-            <li><a href="/home"></a></li>
-            <li><a href="/home"></a></li>
+              
+    <li><a href="/cat/sports">SPORTS</a></li>
+   
+    
+
+    
+
+    
+    <li><a href="/cat/general">GENERAL</a></li>
+   
+   
+
+
+        <li><a href="/cat/science">SCIENCE</a></li>
+
+
+
+                    <li><a href="/cat/health">HEALTH</a></li>
+
+
+
+                    <li><a href="/cat/entertainment">ENTERTAINMENT</a></li>
+         
+
+
+
+           <li><a href="/cat/technology">TECHNOLOGY</a></li>
+  
+
+        <li><a href="/cat/business">BUSINESS</a></li>
+
         </ul>
-    <a class="button" style="margin-left: 35%;" href="/signin" >SIGNIN</button> </a>
+    <a class="button" style="" href="/signin" >SIGNIN</button> </a>
     <a href="/g_home" class="button">refresh</a> 
     <a href="/profile" class="button">Setting </a>
     </div>
 
+<form action="/search" method="">
+<div class="input-container" style="">
+  
+  <input type="text" placeholder="Type something..." name="parm">
+  <input type="submit" id="butt" name="" value="Search">
 
-<br><br>
+</div>
+</form>
+<br><br><br><br><br><br><br><br>
     
 
     <% articles.forEach(article => { %>
