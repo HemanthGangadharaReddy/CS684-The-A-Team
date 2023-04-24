@@ -42,7 +42,8 @@ var db = mongoose.connection;
 db.on('error', () => console.log("Error in Connecting to Database"));
 db.once('open', () => console.log(""));
 
-  app.post("/signup", (req, res) => {
+
+app.post("/signup", (req, res) => {
     var name = req.body.name;
     var email = req.body.email;
     var password = req.body.password;
@@ -62,12 +63,13 @@ db.once('open', () => console.log(""));
     var data = {
       name: name,
       email: email,
-      password: password
+      password: password,
+      General:'general'
     };
   
     db.collection("users").insertOne(data, (err, collection) => {
-      if (err) throw err;
-      return res.send(
+    if (err) throw err;
+    return res.send(
         '<script>alert("Record Inserted Successfully!"); window.location.href = "/signin";</script>'
       );
     });
@@ -89,21 +91,22 @@ app.get("/g_home", async (req, res) => {
 
   if (user){
   res.redirect("/articles")
+
   }else{
     const { data } = await axios.get(`https://newsapi.org/v2/top-headlines?country=us&category=general&apiKey=${API_KEY}`);
     const articles = data.articles;
-    res.render('home', { articles });
+    res.render('home', { articles,user });
   }
 });
 
 
 
 app.get('/signin', (req, res) => {
-    res.sendFile('/Users/ayushchamoli/Desktop/prog/newsss 2/javascript_signup/public/signin.html');
+    res.sendFile('/Users/ayushchamoli/Desktop/prog/newsss/javascript_signup/public/signin.html');
   });
 
   app.get('/signup', (req, res) => {
-    res.sendFile('/Users/ayushchamoli/Desktop/prog/newsss 2/javascript_signup/public/signup.html');
+    res.sendFile('/Users/ayushchamoli/Desktop/prog/newsss/javascript_signup/public/signup.html');
   });
 
   app.get('/home', (req, res) => {
@@ -113,6 +116,8 @@ app.get('/signin', (req, res) => {
 
 
 app.post('/profile', async (request, response) => {
+
+  const { user } = request.session;
 
   try {
 
@@ -125,6 +130,48 @@ app.post('/profile', async (request, response) => {
     const technology = request.body.Technology; 
 
   const { user } = request.session;
+
+  var to_check = 0;
+
+  if (general){
+    to_check = to_check + 1;
+  }
+
+
+  if (business){
+    to_check = to_check + 1;
+  }
+
+
+  if (entertainment){
+    to_check = to_check + 1;
+  }
+
+
+  if (health){
+    to_check = to_check + 1;
+  }
+
+    if (science){
+    to_check = to_check + 1;
+  }
+
+    if (technology){
+    to_check = to_check + 1;
+  }
+
+    if (sport){
+    to_check = to_check + 1;
+  }
+
+
+
+  if (to_check < 1){
+     const msg = "Atleast One must be selected"
+     response.render('profile', {user, msg});
+     return;
+  }
+
   if (user) {
 
         const filter  = {'name':user.username}
@@ -274,7 +321,8 @@ app.get('/profile', (req, res) => {
   const { user } = req.session;
 
   if (user) {
-    res.render('profile', {user});
+    const msg = ""
+    res.render('profile', {user, msg});
   } else {
     res.send("Please log in to perform such an action.<a href='/signin'>login</a>");
   }
@@ -380,6 +428,7 @@ app.get('/search', async (req, res) => {
    res.render("search", { articles, totalPages, currentPage: parseInt(page), user, parms});
 
   } catch (error) {
+
     res.status(500).json({ message: 'Server error' });
   }
 });
