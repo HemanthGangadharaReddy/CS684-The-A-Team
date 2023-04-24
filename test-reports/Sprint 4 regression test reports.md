@@ -20,6 +20,6 @@ Regression Test Cases:
 | 13 | Landing page links | Hemanth | Manual Testing | The landing page should display a list of links for Home and other news categories. | Pass |
 | 14 | Select each category links | Hemanth | Manual Testing | The articles related to Sports category should be displayed upon clicking the Sports link and articles related to Business category should be displayed upon clicking the Business link. | Pass |
 | 15 | Articles order and pagination | Hemanth | Manual Testing | The page should display the articles in descending order with the most recent article as first and only 50 articles should be displayed per page. | Pass |
-| 16 | Search keyword | Hemanth | Manual Testing | The list of articles that have the keyword "bitcoin" in the headlines should be displayed. | Fail |
-| 17 | Advance Search | Hemanth | Manual Testing | The list of articles that have the keywords "crypto" and "ethereum" or "litecoin"  but not "bitcoin" in the headlines should be displayed. | Fail |
+| 16 | Search keyword | Hemanth | Manual Testing | The list of articles that have the keyword "bitcoin" in the articles should be displayed. | Fail |
+| 17 | Advance Search | Hemanth | Manual Testing | The list of articles that have the keywords "crypto" and "ethereum" or "litecoin"  but not "bitcoin" in the articles should be displayed. | Fail |
 | 18 | Search meaningless keyword (Negative) | Hemanth | Manual Testing | A message which says no results found for the keyword should be displayed. | Fail |
