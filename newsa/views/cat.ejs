@@ -8,6 +8,42 @@
 
 
      <style type="text/css">
+
+
+  
+  .input-container {
+  position: absolute;
+  top: 15%;
+  left: 0;
+  width: 100%;
+  height: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.input-container input[type="text"] {
+  width: 71%;
+  height: 30px;
+  font-size: 24px;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(211, 206, 245);
+  outline: none;
+
+}
+
+#butt{
+
+    height: 50px;
+  font-size: 24px;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(211, 206, 245);
+  
+}
   .pagination {
   display: flex;
   justify-content: center;
@@ -56,10 +92,15 @@
 
 
 
+<% if (user) {%>
+  <% if (user.home) {%>
      <li>
          <a href="/articles">HOME</a>
      </li>
-    <% if (user.sport) {%>
+     <%} %>
+
+    <%} %>
+  
 
     <li>
 
@@ -71,11 +112,11 @@
   </li>
     
    
-    <% } %>
+  
 
     
 
-    <% if (user.general) {%>
+  
     <li>
    <% if (current_cat == "general") { %>
     <a href="/cat/general" class="new">GENERAL</a>
@@ -86,10 +127,8 @@
     </li>
 
 
-    <% } %>
 
 
-        <% if (user.science) {%>
         <li>
             <% if (current_cat == 'science') {%>
             <a href="/cat/science" class="new">SCIENCE</a>
@@ -101,9 +140,8 @@
         </li>
 
    
-    <% } %>
+   
 
-        <% if (user.health) {%>
                     <li>
 
                         <% if (current_cat == 'health') {%>
@@ -117,9 +155,8 @@
                     </li>
 
    
-    <% } %>
 
-        <% if (user.entertainment) {%>
+
 
                     <li>
                         <% if (current_cat == 'entertainment') {%>
@@ -132,10 +169,9 @@
                     </li>
          
    
-    <% } %>
+   
 
 
-        <% if (user.technology) {%>
 
 
            <li>
@@ -152,9 +188,8 @@
 
         </li>
    
-    <% } %>
-
-        <% if (user.business) {%>
+    
+        
 
 
         <li>
@@ -167,23 +202,40 @@
             <%} %>
         </li>
    
-    <% } %>
+    
 
 
             
             
         </ul>
-        <a class="button" style="margin-left: 90px;" href="/" >SIGN OUT</button>
-        </a>
-  
+        <% if (user) {%>
+        <a class="button" style="" href="/logout" >SIGN_OUT</a>
         <span style="color: white">Hello, <%= user.username %></span>
+        <%} else {%>
+        <a class="button" style="" href="/signin">SignIn </a>
+            <%} %>
+        }
+        }
+
+        </a>
+
+        
          <a href="/cat/<%= current_cat %>" class="button">refresh</a> <a href="/profile" class="button">Setting </a>
 
        
     </div>
 
 
-<br><br>
+<form action="/search" method="post">
+<div class="input-container" style="">
+  
+  <input type="text" placeholder="Type something..." name="parm">
+  <input type="submit" id="butt" name="" value="Search">
+
+</div>
+</form>
+
+<br><br><br><br><br><br><br><br>
    
     <% articles.forEach(article => { %>
     <div style="border:2px solid black; margin:0px 10% 1px 10%; padding:4%;">
